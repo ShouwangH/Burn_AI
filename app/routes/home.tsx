@@ -1,7 +1,9 @@
-import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { authClient } from "~/src/lib/auth-client";
+import SignIn from "./signin";
+import SignUp from "./signup";
+import SignInG from "./signingoogle";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
@@ -9,5 +11,14 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  const { data, isPending, error } = authClient.useSession()
+  if (data) {
+    return <div>Hello, {data.user.email}!</div>
+  } else {
+    return <div>
+      <SignIn />
+      <SignInG />
+      <SignUp />
+    </div>
+  }
 }
