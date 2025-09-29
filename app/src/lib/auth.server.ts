@@ -17,8 +17,6 @@ export const auth = betterAuth({
             accessType: "offline", 
             prompt: "select_account consent"
         }
-    }, plugins: [
-        oneTap()
-    ]
+    }
     }
 )
