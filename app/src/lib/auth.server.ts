@@ -1,8 +1,24 @@
-import { betterAuth } from "better-auth"
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { db } from '../db/db'
+import * as schema from "../db/schema/auth";
+import { oneTap } from "better-auth/plugins";
+
+
 
 export const auth = betterAuth({
-    database: {
-        provider: "pg",
-        url: process.env.DATABASE_URL,
+    database: drizzleAdapter(db, {provider: "pg", schema:schema})
+    , emailAndPassword: {
+        enabled: true,
+    }, socialProviders: {
+        google: {
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            accessType: "offline", 
+            prompt: "select_account consent"
+        }
+    }, plugins: [
+        oneTap()
+    ]
     }
-})
+)
