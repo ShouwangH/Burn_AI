@@ -1,4 +1,4 @@
-import { Form } from "react-router"
+import { Form, redirect } from "react-router"
 import { authClient } from "~/src/lib/auth-client"
 
 
@@ -6,7 +6,18 @@ export default function SignInG() {
     const signIn = async () => {
         const data = await authClient.signIn.social({
             provider: 'google'
-        })
+        },      {
+        onRequest: (ctx) => {
+          // show loading state
+        },
+        onSuccess: (ctx) => {
+          redirect("chat")
+        },
+        onError: (ctx) => {
+          alert(ctx.error)
+        },
+      }
+    )
     }
 
     return (
