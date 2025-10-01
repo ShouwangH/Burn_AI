@@ -46,7 +46,7 @@ export default function SignIn() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button
-          className="flex rounded-lg justify-self-center w-3/4 p-3 border-2 m-4 place-content-center"
+          className="flex rounded-lg justify-self-center max-w-full p-3 border-2 m-4 place-content-center"
           type="submit"
         >
           Sign In
