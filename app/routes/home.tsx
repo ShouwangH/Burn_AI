@@ -24,7 +24,7 @@ export default function Home() {
     </>
     )
   } else {
-    return <div className="w-full h-screen flex flex-col justify-evenly items-center">
+    return <div className="w-full h-screen flex flex-col justify-evenly items-center bg-black">
       <div className="text-9xl  ">
         AAAAHHHH
       </div>
