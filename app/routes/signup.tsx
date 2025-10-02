@@ -21,7 +21,7 @@ export default function SignUp() {
           // show loading state
         },
         onSuccess: (ctx) => {
-          navigate('chat')
+
         },
         onError: (ctx) => {
           alert(ctx.error)

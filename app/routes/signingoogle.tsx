@@ -11,7 +11,7 @@ export default function SignInG() {
           // show loading state
         },
         onSuccess: (ctx) => {
-          redirect("chat")
+
         },
         onError: (ctx) => {
           alert(ctx.error)
