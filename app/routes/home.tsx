@@ -4,7 +4,6 @@ import SignUp from "./signup";
 import SignInG from "./signingoogle";
 import { useState } from "react";
 import type { Route } from "./+types/home";
-import { Dashboard } from "./dashboard";
 
 
 export function meta({ }: Route.MetaArgs) {
@@ -20,7 +19,6 @@ export default function Home() {
   const [issignin, setissignin] = useState(true)
   if (data) {
     return (<>
-      <Dashboard/>
       <button onClick={logOut}>Log out</button>
     </>
     )
