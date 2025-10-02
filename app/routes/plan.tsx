@@ -11,7 +11,6 @@ const openai = createOpenAI()
 
 
 export async function action({ request }:Route.ActionArgs) {
-    console.log('plan')
     const formData = await request.formData()
     const place = formData.get('place') as string
 
