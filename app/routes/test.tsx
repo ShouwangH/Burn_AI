@@ -1,54 +1,49 @@
 import { useState } from "react";
 
-export default function ImageTest() {
-  const [input, setInput] = useState("");
-  const [images, setImages] = useState<string[]>([]);
+export default function TestAudio() {
+  const [text, setText] = useState("");
+  const [instructions, setInstructions] = useState("Speak in a calm, archival documentary tone.");
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch("/ai", {
+    const res = await fetch("/tts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ place: input }),
+      body: JSON.stringify({ text, instructions }),
     });
 
-    const data = await res.json();
-    console.log("server response:", data);
-
-    if (Array.isArray(data.images)) {
-      setImages(data.images.map((i: { image_url: string }) => i.image_url));
-    } else {
-      console.error("unexpected response", data);
-    }
-
-    setInput("");
+    const { audio_url } = await res.json();
+    setAudioUrl(audio_url);
+    setText("");
   };
 
   return (
-    <div className="flex flex-col w-full max-w-md py-12 mx-auto">
-      <form onSubmit={handleSubmit} className="mb-4 flex gap-2">
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          placeholder="Enter a place..."
-          className="flex-1 border rounded p-2"
+    <div className="flex flex-col max-w-lg mx-auto py-12 gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <textarea
+          className="border rounded p-2"
+          placeholder="Enter narration text..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
-        <button type="submit" className="px-4 py-2 border rounded">
-          Generate
+        <input
+          className="border rounded p-2"
+          placeholder="Optional instructions for voice style..."
+          value={instructions}
+          onChange={(e) => setInstructions(e.target.value)}
+        />
+        <button type="submit" className="border rounded p-2 bg-gray-100">
+          Generate Speech
         </button>
       </form>
 
-      <div className="flex flex-col gap-4">
-        {images.map((url, i) => (
-          <img
-            key={i}
-            src={url}
-            alt={`generated-${i}`}
-            className="rounded shadow max-w-full"
-          />
-        ))}
-      </div>
+      {audioUrl && (
+        <div className="mt-4">
+          <audio controls src={audioUrl} />
+        </div>
+      )}
     </div>
   );
 }

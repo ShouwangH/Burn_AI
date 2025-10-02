@@ -7,5 +7,6 @@ export default [index("routes/home.tsx"),
     route('ai','routes/ai.tsx'),
     route('plan', 'routes/plan.tsx'),
     route('dashboard','routes/dashboard.tsx'),
-    route('burns/:place','routes/burns.tsx')
+    route('burns/:place','routes/burns.tsx'),
+    route('tts', 'routes/tts.tsx')
 ] satisfies RouteConfig;

@@ -1,51 +1,60 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import type { Route } from "./+types/ai";
-import { experimental_generateImage, streamObject} from "ai";
+import { experimental_generateImage, experimental_generateSpeech, streamObject } from "ai";
 import { makeUserPrompt, sceneSchema, systemPlanner } from "~/lib/prompts";
 
 
 const openai = createOpenAI()
 
 export async function action({ request }: Route.ActionArgs) {
-  const { place } = await request.json();
+    const { place } = await request.json();
 
-  const { images } = await experimental_generateImage({
-    model: openai.image("dall-e-3"),
-    prompt: `${place}`,
-    n: 1,
-    size: "1024x1024",
-  });
+    const result = streamObject({
+        model: openai("gpt-4o-mini"),
+        output: "array",
+        schema: sceneSchema,
+        system: systemPlanner,
+        prompt: makeUserPrompt(place),
+    });
 
-  return Response.json({
-    images: images.map(img => ({
-      image_url: `data:${img.mediaType};base64,${img.base64}`,
-    })),
-  });
+    const stream = new ReadableStream ({
+        async start(controller) {
+            const encoder = new TextEncoder()
+
+    for await (const scene of result.elementStream) {
+
+        const { image } = await experimental_generateImage({
+            model: openai.image("gpt-4o-2024-08-06"),
+            prompt: scene.image_prompt,
+            n: 1,
+            size: "1024x1024",
+        });
+
+        const image_url = `data:${image.mediaType};base64,${image.base64}`;
+
+        const { audio } = await experimental_generateSpeech({
+            model: openai.speech('tts-1'),
+            voice: 'echo',
+            text: scene.narration_text,
+            instructions: 'Speak in a calm, archival documentary tone.'
+        }
+        );
+
+        const audio_url = `data:${audio.mediaType};base64,${audio.base64}`;
+
+        const enricheScene = {
+            ...scene,
+            audio_url: audio_url,
+            image_url: image_url
+        }
+
+        const streamPayload = JSON.stringify({ type:"scene", data: enricheScene}) + "\n"
+    }
+    controller.close()}})
+
+    return new Response(stream, {headers: {'Content-type':'application/x-ndjson'}})
+
 }
-
-
-    /*const result = streamObject({
-    model: openai("gpt-4o-mini"),
-    output: "array",          // 👈 important: tell it the root is an array
-    schema: sceneSchema,      // schema applies to each array element
-    system: systemPlanner,
-    prompt: makeUserPrompt(place),
-  });
-
-  for await (const scene of result.elementStream) {
-    console.log("---- scene complete ----");
-    console.log("id:", scene.scene_id);
-    console.log("title:", scene.title);
-    console.log("year/place:", scene.year, scene.place);
-    console.log("narration:", scene.narration_text);
-    console.log("image prompt:", scene.image_prompt);
-    console.log("music mood:", scene.music_mood);
-    console.log("------------------------");
-  }
-  // just end cleanly
-  return new Response("ok");*/
-
-
 
 
 
