@@ -1,6 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import type { Route } from "./+types/ai";
-import { jsonSchema, streamText, type UIMessage } from "ai";
+import { generateObject, jsonSchema, streamObject, streamText, type UIMessage } from "ai";
 import { documentary, makeUserPrompt, systemPlanner } from "~/lib/prompts";
 
 
@@ -10,14 +10,17 @@ const openai = createOpenAI()
 export async function action({ request }: Route.ActionArgs) {
     const { place } = request.body
 
-    const result = streamText({
+    console.log()
+
+    const result = await generateObject({
         model: openai("gpt-4o-mini"),
-        output: "object",
-        schema: jsonSchema(documentary),
-        messages: [{ role: "user", content: makeUserPrompt(place) }],
+        schema: documentary,
+        prompt: makeUserPrompt('High Charity from Halo 2'),
         system: systemPlanner,
     });
 
+    console.log(place)
+
     // returns SSE with the UI Message Stream protocol
-    return result.toUIMessageStreamResponse()
+    return await result.object
 }
