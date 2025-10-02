@@ -1,110 +1,35 @@
 import { jsonSchema } from 'ai';
 
 
-export const systemPlanner = 'You are a documentary planner creating a fictional, Ken-Burns-style mini-history about a civil war. ' +
-    'Your output must be plausible but fictional, respectful, and non-glorifying.' +
-    'Use a calm, archival tone. Keep facts consistent within the story. Avoid real people, modern political groups, or identifiable living individuals.'
+export const systemPlanner = `you are a documentarian in the style of ken burns.
 
-export const makeUserPrompt = (place: string) =>
-    `Create a 30-60 second, 3-4 scene "Ken Burns" mini-documentary about a fictional civil war in ${place}.
+critical rules:
+- tone: calm, archival, reflective. never sensational, never modern slang.
+- perspective: always past tense, omniscient, rooted in human testimony.
+- subject matter: every passage begins with a concrete, period-specific detail (a diary entry, a photograph, a telegram, a soldier’s boots, a widow’s letter). expand outward to the broader historical meaning. end with a restrained, reflective closing line.
+- structure per scene:
+  1. anchoring detail (time + place + object/person).
+  2. temporal expansion (link detail to broader context, use compound sentences).
+  3. reflective resonance (shorter line, understated, emotional but not editorial).
+- sentence cadence: alternate short declaratives and longer, clause-rich sentences. finish each block with a gentle, conclusive rhythm.
+- diction:
+  - nouns: concrete, archival (ledger, dispatch, telegram, diary, boots, rails).
+  - verbs: measured, weighty (endured, recorded, vanished, returned, persisted).
+  - adjectives: sparse and subdued (quiet, faded, somber, endless).
+- avoid:
+  - abstractions without anchoring objects.
+  - adjectives like “amazing,” “horrific,” “fantastic.”
+  - modern politics, modern figures, or explicit gore.`
+
+    export const makeUserPrompt = (prompt: string) =>
+    `Create a 30-60 second, 3-4 scene "Ken Burns" mini-documentary about ${prompt}.
 Constraints:
 - Duration: ~10-15 seconds per scene.
 - Scenes: 3-4 total.
 - No real modern politics, no explicit gore, no hate.
 - Keep tense consistent (past).
-- Each scene includes: narration_text (30-45 words), image_prompt ("sepia-toned", "3:2", "film grain" or "light film grain"), ken_burns semantic camera (move/speed/ease), music_mood.`;
-
-
-export const documentary = jsonSchema<{
-  title: string;
-  logline: string;
-  scenes: {
-    scene_id: string;
-    title: string;
-    year: string;
-    place: string;
-    narration_text: string;
-    image_prompt: string;
-    camera: {
-      move: "pan-establishing" | "pan-epic" | "zoom-in-intimate" | "zoom-in-somber" | "zoom-out-consequence";
-      speed: "very-slow" | "slow" | "moderate";
-      ease: "cubic-in-out" | "linear" | "ease-in" | "ease-out";
-      focus_hint: string;
-      start: { x: number; y: number; scale: number };
-      end: { x: number; y: number; scale: number };
-    };
-    music_mood: string;
-    duration_s: number;
-  }[];
-}>({
-  type: "object",
-  properties: {
-    title: {
-      type: "string",
-      description: "≤ 8 words, archival tone"
-    },
-    logline: {
-      type: "string",
-      description: "1 sentence hook, ≤ 24 words"
-    },
-    scenes: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          scene_id: { type: "string" },
-          title: { type: "string", description: "≤ 6 words" },
-          year: { type: "string", description: "historical year, e.g., '1863'" },
-          place: { type: "string", description: "historical place, e.g., 'Old Port of …'" },
-          narration_text: {
-            type: "string",
-            description: "30–45 words, Ken Burns tone, past tense, include one sensory detail, no dialogue"
-          },
-          image_prompt: {
-            type: "string",
-            description: "sepia-toned historical photo, light film grain, shallow depth of field, vignette, 3:2; describe subjects, props, composition, lighting"
-          },
-          camera: {
-            type: "object",
-            properties: {
-              move: {
-                type: "string",
-                enum: ["pan-establishing","pan-epic","zoom-in-intimate","zoom-in-somber","zoom-out-consequence"],
-                description: "choose one cinematic move"
-              },
-              speed: { type: "string", enum: ["very-slow","slow","moderate"] },
-              ease: { type: "string", enum: ["cubic-in-out","linear","ease-in","ease-out"] },
-              focus_hint: { type: "string", description: "short phrase focus hint, e.g., 'widow's hands'" },
-              start: {
-                type: "object",
-                properties: {
-                  x: { type: "number" },
-                  y: { type: "number" },
-                  scale: { type: "number" }
-                },
-                required: ["x","y","scale"]
-              },
-              end: {
-                type: "object",
-                properties: {
-                  x: { type: "number" },
-                  y: { type: "number" },
-                  scale: { type: "number" }
-                },
-                required: ["x","y","scale"]
-              }
-            },
-            required: ["move","speed","ease","focus_hint","start","end"]
-          },
-          music_mood: { type: "string", description: "simple phrase, e.g., 'sparse strings'" },
-          duration_s: { type: "number", description: "scene duration in seconds (10–15 typical)" }
-        },
-        required: ["scene_id","title","year","place","narration_text","image_prompt","camera","music_mood","duration_s"]
-      }
-    }
-  },
-  required: ["title","logline","scenes"]
-});
+- Each scene includes: narration_text (30-45 words), image_prompt (ALL images must be either sepia-toned or black and white in the style of early 20th-century photography, somber lighting,” “stark contrasts,” “dramatic shadows,” “archival photograph aesthetic.”), ken_burns semantic camera (move/speed/ease), music_mood.
+- image_prompt (must be sepia-toned or black and white, with film grain, vignette, 3:2 ratio; archival/Ansel Adams aesthetic)`
 
 export const sceneSchema = jsonSchema<{
   scene_id: string;
