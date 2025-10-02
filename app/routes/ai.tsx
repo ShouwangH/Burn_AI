@@ -23,37 +23,27 @@ export async function action({ request }: Route.ActionArgs) {
 
             for await (const scene of result.elementStream) {
 
-                const { image } = await experimental_generateImage({
-                    model: openai.image("dall-e-3"),
+               const { image } = await experimental_generateImage({
+                    model: openai.image("dall-e-2"),
                     prompt: scene.image_prompt,
                     n: 1,
-                    size: "1024x1024",
+                    size: "256x256",
                 });
 
                 const image_url = `data:${image.mediaType};base64,${image.base64}`;
 
                 const { audio } = await experimental_generateSpeech({
-                    model: openai.speech('tts-1'),
+                    model: openai.speech("gpt-4o-mini-tts"),
                     voice: 'onyx',
                     text: scene.narration_text,
-                    instructions: `tone:
-measured, archival, almost judicial. it sounds like someone reading from a historical record with respect, not performance. no dramatics, no peaks or valleys.
-
-pacing:
-slow to moderate, about 120–140 words per minute. enough space that each word lands. never rushed.
-
-emotion:
-restrained but heavy with implication. the narrator doesn’t cry, but the weight of loss, endurance, or memory is present in the timbre.
-
-emphasis:
-placed on nouns and verbs, not adjectives. “they endured the winter.” “a single letter was carried across the front.” adjectives are downplayed, almost parenthetical.
-
-pronunciation:
-clear, standard american english, slightly formal, no regionalisms. consonants softened but distinct. vowels elongated just enough to feel deliberate.
-
-pauses:
-regular, deliberate pauses after each complete thought. often a short beat between sentence one (detail) and sentence two (expansion), then a slightly longer pause before the reflective close. silence is part of the rhythm.`
-                }
+                    providerOptions:{ openai:{tone:'measured, archival, almost judicial. it sounds like someone reading from a historical record with respect, not performance. no dramatics, no peaks or valleys.',
+                                pacing:'slow to moderate, about 120–140 words per minute. enough space that each word lands. never rushed.',
+                                emotion:'restrained but heavy with implication. the narrator doesn’t cry, but the weight of loss, endurance, or memory is present in the timbre.',
+                                emphasis:'placed on nouns and verbs, not adjectives. “they endured the winter.” “a single letter was carried across the front.” adjectives are downplayed, almost parenthetical.',
+                                pronunciation: 'clear, standard american english, slightly formal, no regionalisms. consonants softened but distinct. vowels elongated just enough to feel deliberate.',
+                                pauses: 'regular, deliberate pauses after each complete thought. often a short beat between sentence one (detail) and sentence two (expansion), then a slightly longer pause before the reflective close. silence is part of the rhythm.'
+                    }}
+                    }
                 );
 
                 const audio_url = `data:${audio.mediaType};base64,${audio.base64}`;

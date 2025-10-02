@@ -38,11 +38,15 @@ export default function Test() {
         }
     }
     return (
-        <div>
+                <div className="bg-black h-screen">
+        <div className="flex flex-col w-full max-w-4xl py-24 mx-auto h-full">
             <SceneController scenes={scenes}/>
-                <div>
-                    <input value={input} onChange={(e) => setInput(e.target.value)} />
-                    <button onClick={() => fetchScenes(input)}>Generate</button>
+                <form onSubmit={(e) => {
+                    e.preventDefault()
+                    setInput('')
+                    fetchScenes(input)}}>
+                    <input className="fixed text-center dark:bg-zinc-900 bottom-0 w-full max-w-4xl p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded-xl shadow-xl text-stone-100" placeholder="What do you want to Burns?"value={input} onChange={(e) => setInput(e.target.value)} />
+                </form>
                 </div>
         </div>
     );
