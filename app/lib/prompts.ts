@@ -105,3 +105,47 @@ export const documentary = jsonSchema<{
   },
   required: ["title","logline","scenes"]
 });
+
+export const sceneSchema = jsonSchema<{
+  scene_id: string;
+  title: string;
+  year: string;
+  place: string;
+  narration_text: string;
+  image_prompt: string;
+  camera: {
+    move: string;
+    speed: string;
+    ease: string;
+    focus_hint: string;
+    start: { x: number; y: number; scale: number };
+    end: { x: number; y: number; scale: number };
+  };
+  music_mood: string;
+  duration_s: number;
+}>({
+  type: "object",
+  properties: {
+    scene_id: { type: "string" },
+    title: { type: "string" },
+    year: { type: "string" },
+    place: { type: "string" },
+    narration_text: { type: "string" },
+    image_prompt: { type: "string" },
+    camera: {
+      type: "object",
+      properties: {
+        move: { type: "string" },
+        speed: { type: "string" },
+        ease: { type: "string" },
+        focus_hint: { type: "string" },
+        start: { type: "object", properties: { x: { type: "number" }, y: { type: "number" }, scale: { type: "number" } }, required: ["x","y","scale"] },
+        end: { type: "object", properties: { x: { type: "number" }, y: { type: "number" }, scale: { type: "number" } }, required: ["x","y","scale"] }
+      },
+      required: ["move","speed","ease","focus_hint","start","end"]
+    },
+    music_mood: { type: "string" },
+    duration_s: { type: "number" }
+  },
+  required: ["scene_id","title","year","place","narration_text","image_prompt","camera","music_mood","duration_s"]
+});

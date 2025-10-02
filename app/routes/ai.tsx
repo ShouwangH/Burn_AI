@@ -1,26 +1,51 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import type { Route } from "./+types/ai";
-import { generateObject, jsonSchema, streamObject, streamText, type UIMessage } from "ai";
-import { documentary, makeUserPrompt, systemPlanner } from "~/lib/prompts";
-
+import { experimental_generateImage, streamObject} from "ai";
+import { makeUserPrompt, sceneSchema, systemPlanner } from "~/lib/prompts";
 
 
 const openai = createOpenAI()
 
 export async function action({ request }: Route.ActionArgs) {
-    const { place } = request.body
+  const { place } = await request.json();
 
-    console.log()
+  const { images } = await experimental_generateImage({
+    model: openai.image("dall-e-3"),
+    prompt: `${place}`,
+    n: 1,
+    size: "1024x1024",
+  });
 
-    const result = await generateObject({
-        model: openai("gpt-4o-mini"),
-        schema: documentary,
-        prompt: makeUserPrompt('High Charity from Halo 2'),
-        system: systemPlanner,
-    });
-
-    console.log(place)
-
-    // returns SSE with the UI Message Stream protocol
-    return await result.object
+  return Response.json({
+    images: images.map(img => ({
+      image_url: `data:${img.mediaType};base64,${img.base64}`,
+    })),
+  });
 }
+
+
+    /*const result = streamObject({
+    model: openai("gpt-4o-mini"),
+    output: "array",          // 👈 important: tell it the root is an array
+    schema: sceneSchema,      // schema applies to each array element
+    system: systemPlanner,
+    prompt: makeUserPrompt(place),
+  });
+
+  for await (const scene of result.elementStream) {
+    console.log("---- scene complete ----");
+    console.log("id:", scene.scene_id);
+    console.log("title:", scene.title);
+    console.log("year/place:", scene.year, scene.place);
+    console.log("narration:", scene.narration_text);
+    console.log("image prompt:", scene.image_prompt);
+    console.log("music mood:", scene.music_mood);
+    console.log("------------------------");
+  }
+  // just end cleanly
+  return new Response("ok");*/
+
+
+
+
+
