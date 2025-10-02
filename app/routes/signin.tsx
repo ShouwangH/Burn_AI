@@ -18,7 +18,7 @@ export default function SignIn() {
           console.log('loading')
         },
         onSuccess: (ctx) => {
-          navigate('chat')
+
           
         },
         onError: (ctx) => {

@@ -1,40 +1,23 @@
-import { createOpenAI} from '@ai-sdk/openai';
-import { streamText, type UIMessage, convertToModelMessages } from 'ai';
-import type { Route } from './+types/chat';
+import { createOpenAI } from "@ai-sdk/openai";
+import type { Route } from "./+types/ai";
+import { jsonSchema, streamText, type UIMessage } from "ai";
+import { documentary, makeUserPrompt, systemPlanner } from "~/lib/prompts";
 
 
-
-export const maxDuration = 30;
 
 const openai = createOpenAI()
 
 export async function action({ request }: Route.ActionArgs) {
-    const { messages }: { messages: UIMessage[] } = await request.json()
-
-    
+    const { place } = request.body
 
     const result = streamText({
-        model: openai('gpt-4'),
-        messages: convertToModelMessages(messages)
-    })
+        model: openai("gpt-4o-mini"),
+        output: "object",
+        schema: jsonSchema(documentary),
+        messages: [{ role: "user", content: makeUserPrompt(place) }],
+        system: systemPlanner,
+    });
 
-return result.toUIMessageStreamResponse({
-    originalMessages: messages, // pass this in for type-safe return objects
-    messageMetadata: ({ part }) => {
-      // Send metadata when streaming starts
-      if (part.type === 'start') {
-        return {
-          createdAt: Date.now(),
-          model: 'gpt-4o',
-        };
-      }
-
-      // Send additional metadata when streaming completes
-      if (part.type === 'finish') {
-        return {
-          totalTokens: part.totalUsage.totalTokens,
-        };
-      }
-    },
-  });
+    // returns SSE with the UI Message Stream protocol
+    return result.toUIMessageStreamResponse()
 }

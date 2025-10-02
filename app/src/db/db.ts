@@ -1,26 +1,31 @@
-import 'dotenv/config'
-import { drizzle } from 'drizzle-orm/postgres-js';
+import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from 'postgres'
-import { chat } from './schema/chat';
-import { eq } from 'drizzle-orm';
-
-
+import { burnsPlan } from "./schema/burns";
+import { eq } from "drizzle-orm";
 
 const client = postgres(process.env.DATABASE_URL!)
-export const db = drizzle({client})
+export const db = drizzle({ client });
 
-export async function getChats() {
-    const allChats = await db.select().from(chat)
-    return allChats.map(chat=>chat.id)
+export async function addPlan(place: string) {
+  console.log('insert')
+  const [job] = await db
+    .insert(burnsPlan)
+    .values({ place, status: "pending" })
+    .returning();
+  return job;
 }
 
-export async function getCurrentChat(chatId:string) {
-    const currentChat = await db.select().from(chat).where(eq(chat.chat_id,chatId))
-    return currentChat[0]
+export async function updatePlan(id: number, planJson: object) {
+  await db
+    .update(burnsPlan)
+    .set({ planJson, status: "ready", updatedAt: new Date() })
+    .where(eq(burnsPlan.id,id));
 }
 
-
-export async function setChat(newChat) {
-    await db.insert(chat).values(newChat).onConflictDoUpdate({target:chat.id, set{messages:newChat.messages}})
+export async function getPlan(place: string) {
+  return db
+    .select()
+    .from(burnsPlan)
+    .where(eq(burnsPlan.place,place))
+    .limit(1);
 }
-
