@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import SceneController from "~/sceneController";
 
 export default function Test() {
-    const [scenes, setScenes] = useState<any[]>([]);
+    const [scenes, setScenes] = useState([]);
     const [input, setInput] = useState('')
 
 
@@ -37,16 +37,18 @@ export default function Test() {
             }
         }
     }
+
+    console.log(scenes)
     return (
                 <div className="bg-black h-screen">
-        <div className="flex flex-col w-full max-w-4xl py-24 mx-auto h-full">
-            <SceneController scenes={scenes}/>
+        <div className="justify-items-center aspect-square max-w-4xl py-4">
+            {scenes.length ? <SceneController scenes={scenes}/> :
                 <form onSubmit={(e) => {
                     e.preventDefault()
                     setInput('')
                     fetchScenes(input)}}>
-                    <input className="fixed text-center dark:bg-zinc-900 bottom-0 w-full max-w-4xl p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded-xl shadow-xl text-stone-100" placeholder="What do you want to Burns?"value={input} onChange={(e) => setInput(e.target.value)} />
-                </form>
+                    <input className="fixed text-center dark:bg-zinc-900 bottom-0 w-2xl max-w-4xl p-2 mb-80 border border-zinc-300 dark:border-zinc-800 rounded-xl shadow-xl text-stone-100" placeholder="What do you want to Burns?"value={input} onChange={(e) => setInput(e.target.value)} />
+                </form>}
                 </div>
         </div>
     );
