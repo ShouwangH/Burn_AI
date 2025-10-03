@@ -22,12 +22,12 @@ export function createKenBurnsClass(sceneId: string, camera: any, duration: numb
     const sheet = ensureStyleSheet();
     const animName = `kenburns-${sceneId}`;
 
-    console.log('create KenBurns')
+  
 
     // build keyframes css string
     const frames = camera.keyframes
         .map((kf: any) => {
-            const t = `scale3d(${kf.scale},${kf.scale},1) translate3d(${kf.x}px,${kf.y}px,0)`;
+            const t = `scale3d(${kf.scale *3.5 },${kf.scale*3.5},1) translate3d(${kf.x}px,${kf.y}px,0)`;
             const opacity = kf.opacity !== undefined ? `opacity:${kf.opacity};` : "";
             return `${kf.percent}% { transform:${t}; ${opacity} }`;
         })
@@ -35,16 +35,14 @@ export function createKenBurnsClass(sceneId: string, camera: any, duration: numb
 
     const rule = `@keyframes ${animName} { ${frames} }`;
 
-    console.log(rule)
 
     // insert rule into stylesheet
     sheet.insertRule(rule, sheet.cssRules.length);
 
-    console.log(sheet)
 
     // return classname with animation attached
-    const className = `scale-500 kenburns-${sceneId}`;
-    const animRule = `.${className} { animation:${animName} 2000ms forwards; transform-origin:center center; }`;
+    const className = `kenburns-${sceneId}`;
+    const animRule = `.${className} { animation:${animName} ${duration*2000}ms forwards; transform-origin:center center; }`;
     sheet.insertRule(animRule, sheet.cssRules.length);
 
     console.log(sheet)
@@ -76,7 +74,7 @@ export default function SceneComp({ scene, onEnded }: SceneCompProps) {
     }, [scene]);
 
     return (
-        <div className="overflow-hidden aspect-square w-screen h-screen justify-center">
+        <div className="justify-items-center p-96 ml-120 overflow-hidden aspect-square h-screen w-screen">
             <img src={scene.image_url} alt={scene.title} className={animClass} />
         </div>
     );

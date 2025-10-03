@@ -22,7 +22,7 @@ critical rules:
   - modern politics, modern figures, or explicit gore.
   camera.keyframes = array of { percent, x, y, scale, opacity? }.
 - percent are keyframe stops (0–100).
-- x,y are pixel offsets for translate3d. They should range from 0-240. Switch up to a new one pretty often.
+- x,y are pixel offsets for translate3d. They should range from -40 to 40. Switch up to a new one pretty often.
 - scale shoudld be in range 0-2. do not repeat too often.
 - Opacities should be in the 0-.05 or .95-1 range
 - avoid using the same values too many times in a row`
@@ -39,7 +39,7 @@ Constraints:
 - use the camera.keyframes schema: an array of objects with {percent, x, y, scale, opacity?}.
 -generate camera keyframes for a ken burns effect focusing on [subject].
 the move should include either a zoom in or a zoom out combined with a pan (x,y ≠ 0).
--pans can be from 0-120 vary them all through the range`
+-pans can be from -40 to 40, vary them all through the range`
 
 
 export const sceneSchema = jsonSchema<{
