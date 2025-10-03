@@ -6,6 +6,14 @@ export default function Test() {
     const [input, setInput] = useState('')
     const [visibility, setVisibility] = useState(true)
     const [burnsPhrase, setBurnsPhrase] = useState('Loading')
+    const [isFinal, setIsFinal] =useState(false)
+
+    function reset () {
+        console.log('resethome')
+        setScenes([])
+        setVisibility(true)
+        setIsFinal(false)
+    }
 
     useEffect(() => {
         setBurnsPhrase(loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)])
@@ -20,8 +28,6 @@ export default function Test() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt: input }),
         });
-
-        setInterval('');
 
         const reader = res.body!.getReader();
         const decoder = new TextDecoder();
@@ -38,6 +44,7 @@ export default function Test() {
             for (const partialObject of partialStream) {
                 if (!partialObject.trim()) continue;
                 const payload = JSON.parse(partialObject);
+                if (payload.type ==='end') setIsFinal(true)
                 if (payload.type === "scene") {
                     setScenes((prev) => [...prev, payload.data]);
                 }
@@ -71,16 +78,16 @@ export default function Test() {
     const visibilityInput = visibility ? "" : " invisible "
     const inputStyle = "fixed text-center dark:bg-zinc-900 bottom-0 w-2xl max-w-4xl p-2 mb-80 border border-zinc-300 dark:border-zinc-800 rounded-xl shadow-xl text-stone-100" + visibilityInput
 
-    console.log(scenes)
     return (
         <div className="bg-black h-screen">
             <div className="justify-items-center aspect-square max-w-4xl py-4">
-                {scenes.length ? <SceneController scenes={scenes} /> :
+                {scenes.length ? <SceneController scenes={scenes} isFinal={isFinal} resetHome={reset}/> :
                     <form onSubmit={(e) => {
                         e.preventDefault()
                         setInput('')
                         fetchScenes(input)
                         handleVis()
+                        setIsFinal(false)
                     }}>
                         <input className={inputStyle} placeholder="What do you want to Burns?" value={input} onChange={(e) => setInput(e.target.value)} />
                     </form>}

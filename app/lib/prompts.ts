@@ -19,13 +19,7 @@ critical rules:
 - avoid:
   - abstractions without anchoring objects.
   - adjectives like “amazing,” “horrific,” “fantastic.”
-  - modern politics, modern figures, or explicit gore.
-  camera.keyframes = array of { percent, x, y, scale, opacity? }.
-- percent are keyframe stops (0–100).
-- x,y are pixel offsets for translate3d. They should range from -40 to 40. Switch up to a new one pretty often.
-- scale shoudld be in range 0-2. do not repeat too often.
-- Opacities should be in the 0-.05 or .95-1 range
-- avoid using the same values too many times in a row`
+  - modern politics, modern figures, or explicit gore.`
 
     export const makeUserPrompt = (prompt: string) =>
     `Create a 30-60 second, 3-4 scene "Ken Burns" mini-documentary about ${prompt}.
@@ -35,66 +29,24 @@ Constraints:
 - No real modern politics, no explicit gore, no hate.
 - Keep tense consistent (past).
 - Each scene includes: narration_text (30-45 words), image_prompt (ALL images must be either sepia-toned or black and white in the style of early 20th-century photography, somber lighting,” “stark contrasts,” “dramatic shadows,” “archival photograph aesthetic.”), ken_burns semantic camera (move/speed/ease), music_mood.
-- image_prompt (must be sepia-toned or black and white, with film grain, vignette, 3:2 ratio; archival/Ansel Adams aesthetic)
-- use the camera.keyframes schema: an array of objects with {percent, x, y, scale, opacity?}.
--generate camera keyframes for a ken burns effect focusing on [subject].
-the move should include either a zoom in or a zoom out combined with a pan (x,y ≠ 0).
--pans can be from -40 to 40, vary them all through the range`
+- image_prompt (must be sepia-toned or black and white, with film grain, vignette, 3:2 ratio; archival/Ansel Adams aesthetic)`
+
 
 
 export const sceneSchema = jsonSchema<{
   scene_id: string;
-  title: string;
   year: string;
   place: string;
   narration_text: string;
   image_prompt: string;
-  camera: {
-    speed: string;
-    ease: "ease" | "ease-in" | "ease-out" | "ease-in-out" | "linear";
-    keyframes: Array<{
-      percent: number; // 0–100
-      x: number;
-      y: number;
-      scale: number;
-      opacity?: number; // optional for fade-in/out
-    }>;
-  };
-  music_mood: string;
-  duration_s: number;
 }>({
   type: "object",
   properties: {
     scene_id: { type: "string" },
-    title: { type: "string" },
     year: { type: "string" },
     place: { type: "string" },
     narration_text: { type: "string" },
     image_prompt: { type: "string" },
-    camera: {
-      type: "object",
-      properties: {
-        speed: { type: "string" },
-        ease: { type: "string", enum: ["ease","ease-in","ease-out","ease-in-out","linear"] },
-        keyframes: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              percent: { type: "number" },
-              x: { type: "number" },
-              y: { type: "number" },
-              scale: { type: "number" },
-              opacity: { type: "number" }
-            },
-            required: ["percent","x","y","scale"]
-          }
-        }
-      },
-      required: ["speed","ease","keyframes"]
-    },
-    music_mood: { type: "string" },
-    duration_s: { type: "number" }
   },
   required: [
     "scene_id",
@@ -103,8 +55,5 @@ export const sceneSchema = jsonSchema<{
     "place",
     "narration_text",
     "image_prompt",
-    "camera",
-    "music_mood",
-    "duration_s"
   ]
 });

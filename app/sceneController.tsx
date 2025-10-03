@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from "react"
 import type { Scene } from "./lib/scenes";
 import SceneComp from "./scene";
-import MusicPlayer from "./musicPlayer";
 
 interface SceneControllerProps {
     scenes: Scene[];
+    isFinal: boolean
+    resetHome: ()=> void
 }
 
 
 
-export default function SceneController({ scenes }: SceneControllerProps) {
+export default function SceneController({ scenes, isFinal, resetHome }: SceneControllerProps) {
     const songs = [
         "/audio/music1.mp3",
         "/audio/music2.mp3",
@@ -39,6 +40,7 @@ export default function SceneController({ scenes }: SceneControllerProps) {
             };
 
             audio.play().catch((err) => console.warn("autoplay blocked", err));
+            audio.volume = .5
         }
     }, [currentScene]);
 
@@ -46,16 +48,32 @@ export default function SceneController({ scenes }: SceneControllerProps) {
         setCurrentIndex(currentIndex + 1)
     }
 
+    function stopMusicwithFade() {
+        const endMusic = setInterval(()=>{
+            console.log(audioRef.current.volume, " volume down")
+            audioRef.current.volume = audioRef.current.volume - .1
+            if (audioRef.current.volume <= .1) {
+                audioRef.current.volume = 0
+                audioRef.current.pause()
+                audioRef.current.src = ''
+                audioRef.current = null
+                clearInterval(endMusic)
+                resetHome()
+            }
+        }
+        ,100)
+    }
+
+
 
     return (
         <div>
-
             {currentScene ? (
                 <> 
                     <SceneComp
                         key={currentScene.scene_id}
                         scene={currentScene}
-                        onEnded={handleSceneEnded} /></>)
+                        onEnded={handleSceneEnded} isFinal={isFinal} stopMusic={stopMusicwithFade}/></>)
                 : null
 
             }
