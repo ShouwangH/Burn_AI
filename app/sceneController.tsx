@@ -10,8 +10,7 @@ interface SceneControllerProps {
 
 
 export default function SceneController({ scenes }: SceneControllerProps) {
-
-        const songs = [
+    const songs = [
         "/audio/music1.mp3",
         "/audio/music2.mp3",
         "/audio/music3.mp3",
@@ -24,33 +23,29 @@ export default function SceneController({ scenes }: SceneControllerProps) {
     const audioRef = useRef(null);
 
     useEffect(() => {
-    if (!currentScene) return;
+        if (!currentScene) return;
 
-    if (!audioRef.current) {
-      const audio = new Audio();
-      audioRef.current = audio;
+        if (!audioRef.current) {
+            const audio = new Audio();
+            audioRef.current = audio;
 
-      const pick = songs[Math.floor(Math.random() * songs.length)];
-      audio.src = pick;
+            const pick = songs[Math.floor(Math.random() * songs.length)];
+            audio.src = pick;
 
-      audio.onended = () => {
-        const next = songs[Math.floor(Math.random() * songs.length)];
-        audio.src = next;
-        audio.play().catch((err) => console.warn("play failed", err));
-      };
+            audio.onended = () => {
+                const next = songs[Math.floor(Math.random() * songs.length)];
+                audio.src = next;
+                audio.play().catch((err) => console.warn("play failed", err));
+            };
 
-      audio.play().catch((err) => console.warn("autoplay blocked", err));
-    }
-  }, [currentScene]);
+            audio.play().catch((err) => console.warn("autoplay blocked", err));
+        }
+    }, [currentScene]);
 
     function handleSceneEnded() {
-        console.log(currentIndex)
         setCurrentIndex(currentIndex + 1)
-
-        console.log(currentIndex)
-        console.log(scenes.length)
     }
-    
+
 
     return (
         <div>
@@ -61,8 +56,8 @@ export default function SceneController({ scenes }: SceneControllerProps) {
                         key={currentScene.scene_id}
                         scene={currentScene}
                         onEnded={handleSceneEnded} /></>)
-                :
-                <p>Loading Scenes</p>
+                : null
+
             }
         </div>
     )

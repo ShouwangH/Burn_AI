@@ -22,8 +22,6 @@ export function createKenBurnsClass(sceneId: string, camera: any, duration: numb
     const sheet = ensureStyleSheet();
     const animName = `kenburns-${sceneId}`;
 
-  
-
     // build keyframes css string
     const frames = camera.keyframes
         .map((kf: any) => {
