@@ -35,14 +35,7 @@ export async function action({ request }: Route.ActionArgs) {
                 const { audio } = await experimental_generateSpeech({
                     model: openai.speech("gpt-4o-mini-tts"),
                     voice: 'onyx',
-                    text: scene.narration_text,
-                    providerOptions:{ openai:{tone:'measured, archival, almost judicial. it sounds like someone reading from a historical record with respect, not performance. no dramatics, no peaks or valleys.',
-                                pacing:'slow to moderate, about 120–140 words per minute. enough space that each word lands. never rushed.',
-                                emotion:'restrained but heavy with implication. the narrator doesn’t cry, but the weight of loss, endurance, or memory is present in the timbre.',
-                                emphasis:'placed on nouns and verbs, not adjectives. “they endured the winter.” “a single letter was carried across the front.” adjectives are downplayed, almost parenthetical.',
-                                pronunciation: 'clear, standard american english, slightly formal, no regionalisms. consonants softened but distinct. vowels elongated just enough to feel deliberate.',
-                                pauses: 'regular, deliberate pauses after each complete thought. often a short beat between sentence one (detail) and sentence two (expansion), then a slightly longer pause before the reflective close. silence is part of the rhythm.'
-                    }}
+                    text: scene.narration_text
                     }
                 );
 
@@ -57,6 +50,7 @@ export async function action({ request }: Route.ActionArgs) {
                 const streamPayload = JSON.stringify({ type: "scene", data: enrichedScene }) + "\n"
                 controller.enqueue(encoder.encode(streamPayload))
             }
+            controller.enqueue(encoder.encode(JSON.stringify({ type: "end" }) + "\n"));
             controller.close()
         }
     })
