@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react";
 import SceneController from "~/sceneController";
+import {auth} from "../src/lib/auth.server"
+import { redirect, type LoaderFunctionArgs } from "react-router";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+    const session = await auth.api.getSession({ headers: request.headers })
+    if (session?.user) {
+        return { user: session.user }
+    } else {
+        throw redirect("/")
+    }
+}
 
 export default function Test() {
     const [scenes, setScenes] = useState([]);

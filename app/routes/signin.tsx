@@ -7,7 +7,8 @@ export default function SignIn() {
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
 
-  const signIn = async () => {
+  const signIn = async (e) => {
+    e.preventDefault()
     await authClient.signIn.email(
       {
         email,
@@ -18,7 +19,7 @@ export default function SignIn() {
           console.log('loading')
         },
         onSuccess: (ctx) => {
-
+          navigate('/burns')
           
         },
         onError: (ctx) => {
@@ -29,7 +30,7 @@ export default function SignIn() {
   }
 
   return (
-      <Form onSubmit={signIn}>
+      <form onSubmit={signIn}>
         <div className="flex flex-col p-2">
         <input
           className="border-1 p-1 m-4 text-white"
@@ -52,6 +53,6 @@ export default function SignIn() {
           Sign In
         </button>
         </div>
-      </Form>
+      </form>
   )
 }

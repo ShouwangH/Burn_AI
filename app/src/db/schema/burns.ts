@@ -1,10 +1,13 @@
-import { pgTable, serial, text, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-export const burnsPlan = pgTable("burns_plan", {
+export const scenes = pgTable("scenes", {
   id: serial("id").primaryKey(),
-  place: text("place").notNull(),
-  status: text("status").notNull().default("pending"),
-  planJson: jsonb("plan_json"),
+  doc_id: uuid('doc_id'),
+  order: integer('order'),
+  narration_text: text('narration_text'),
+  image_prompt: text('image_prompt'),
+  image_base64: text('image_base64'),
+  audio_base64: text('audio_base64'),
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+
 });
