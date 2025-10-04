@@ -49,7 +49,8 @@ export default function SceneController({ scenes, isFinal, resetHome }: SceneCon
     }
 
     function stopMusicwithFade() {
-        const endMusic = setInterval(()=>{
+        setTimeout(() => {
+            const endMusic = setInterval(()=>{
             console.log(audioRef.current.volume, " volume down")
             audioRef.current.volume = audioRef.current.volume - .1
             if (audioRef.current.volume <= .1) {
@@ -61,7 +62,9 @@ export default function SceneController({ scenes, isFinal, resetHome }: SceneCon
                 resetHome()
             }
         }
-        ,100)
+        ,2000)
+            
+        }, 30000);
     }
 
 

@@ -1,4 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
+import { createElevenLabs} from '@ai-sdk/elevenlabs'
 import type { Route } from "./+types/ai";
 import { experimental_generateImage, experimental_generateSpeech, streamObject } from "ai";
 import { makeUserPrompt, sceneSchema, systemPlanner } from "~/lib/prompts";
@@ -6,6 +7,7 @@ import { insertScenes } from "~/src/db/db";
 
 
 const openai = createOpenAI()
+const elevenlabs = createElevenLabs()
 
 export async function action({ request }: Route.ActionArgs) {
     const { prompt } = await request.json();
@@ -32,6 +34,7 @@ export async function action({ request }: Route.ActionArgs) {
                     prompt: scene.image_prompt,
                     n: 1,
                     size: "256x256",
+                    maxRetries: 5
                 });
 
                 const image_url = `data:${image.mediaType};base64,${image.base64}`;
@@ -40,6 +43,7 @@ export async function action({ request }: Route.ActionArgs) {
                     model: openai.speech("gpt-4o-mini-tts"),
                     voice: 'onyx',
                     text: scene.narration_text
+
                     }
                 );
 

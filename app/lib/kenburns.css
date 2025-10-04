@@ -34,22 +34,22 @@
 
 
 
-.duration-fast { --duration: 15s; }
-.duration-med  { --duration: 18s; }
-.duration-slow { --duration: 20s; }
+.duration-fast { --duration: 20s; }
+.duration-med  { --duration: 22s; }
+.duration-slow { --duration: 25s; }
 
 .preset-up    { --x-start: 0%; --y-start: 20%; --x-end: 0%; --y-end: -20%; }
 .preset-down  { --x-start: 0%; --y-start: -20%; --x-end: 0%; --y-end: 20%; }
 .preset-left  { --x-start: 20%; --y-start: 0%; --x-end: -20%; --y-end: 0%; }
 .preset-right { --x-start: -20%; --y-start: 0%; --x-end: 20%; --y-end: 0%; }
 
-.zoom-in-soft   { --scale-start: 1.5; --scale-end: 1.7; }
-.zoom-in        { --scale-start: 1.5; --scale-end: 2.0; }
-.zoom-in-strong { --scale-start: 1.5; --scale-end: 2.5; }
+.zoom-in-soft   { --scale-start: 1.2; --scale-end: 1.5; }
+.zoom-in        { --scale-start: 1.2; --scale-end: 1.7; }
+.zoom-in-strong { --scale-start: 1.2; --scale-end: 2.0; }
 
-.zoom-out-soft   { --scale-start: 2.0; --scale-end: 1.5; }
-.zoom-out        { --scale-start: 2.5; --scale-end: 1.5; }
-.zoom-out-strong { --scale-start: 3.0; --scale-end: 1.5; }
+.zoom-out-soft   { --scale-start: 1.5; --scale-end: 1.0; }
+.zoom-out        { --scale-start: 1.7; --scale-end: 1.1; }
+.zoom-out-strong { --scale-start: 2.0; --scale-end: 1.2; }
 
 
 

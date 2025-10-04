@@ -50,7 +50,8 @@ export default function SceneComp({ scene, onEnded, isFinal, stopMusic }: SceneC
 
         sceneAudio.onended = (() => {
             onEnded()
-        if (isFinal) stopMusic()
+        /*if (isFinal) {
+            stopMusic()}*/
         })
 
         return () => {
