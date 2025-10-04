@@ -9,7 +9,8 @@ export default function SignUp() {
   const navigate = useNavigate()
   
 
-  const signUp = async () => {
+  const signUp = async (e) => {
+    e.preventDefault()
     await authClient.signUp.email(
       {
         email,
@@ -21,7 +22,7 @@ export default function SignUp() {
           // show loading state
         },
         onSuccess: (ctx) => {
-
+          navigate('/burns')
         },
         onError: (ctx) => {
           alert(ctx.error)

@@ -1,9 +1,12 @@
 import { Form, redirect } from "react-router"
 import { authClient } from "~/src/lib/auth-client"
+import { useNavigate } from "react-router"
 
 
 export default function SignInG() {
-    const signIn = async () => {
+  const navigate = useNavigate()
+    const signIn = async (e) => {
+        e.preventDefault()
         const data = await authClient.signIn.social({
             provider: 'google'
         },      {
@@ -11,7 +14,7 @@ export default function SignInG() {
           // show loading state
         },
         onSuccess: (ctx) => {
-
+          navigate("/burns")
         },
         onError: (ctx) => {
           alert(ctx.error)
