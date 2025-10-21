@@ -7,7 +7,7 @@ import type { UUID } from "crypto";
 const client = postgres(process.env.DATABASE_URL!)
 export const db = drizzle({ client });
 
-export async function insertScenes(doc_id:UUID, order:number, narration_text:string,image_prompt:string, image_base64:string,
+export async function insertScenes(doc_id:UUID, order:number, narration_text:string,image_prompt:string, image_base64:string | null,
   audio_base64:string) {
    await db
     .insert(scenes)

@@ -1,15 +1,20 @@
 .frame {
-  width: 720px;
-  height: 720px;
+  width: min(720px, 80vw);
+  height: min(720px, 80vw);
   overflow: hidden;       /* crop image */
   position: absolute;
-  top:5%;
-  left:25%
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .frame img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   animation: kenburns var(--duration, 8s) var(--easing, ease-in-out) forwards;
 }
 
@@ -34,9 +39,9 @@
 
 
 
-.duration-fast { --duration: 20s; }
-.duration-med  { --duration: 22s; }
-.duration-slow { --duration: 25s; }
+.duration-fast { --duration: 18s; }
+.duration-med  { --duration: 20s; }
+.duration-slow { --duration: 24s; }
 
 .preset-up    { --x-start: 0%; --y-start: 20%; --x-end: 0%; --y-end: -20%; }
 .preset-down  { --x-start: 0%; --y-start: -20%; --x-end: 0%; --y-end: 20%; }
@@ -56,4 +61,3 @@
 .ease-linear  { --easing: linear; }
 .ease-smooth  { --easing: ease-in-out; }
 .ease-drama   { --easing: cubic-bezier(0.77, 0, 0.175, 1); }
-

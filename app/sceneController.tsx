@@ -21,7 +21,14 @@ export default function SceneController({ scenes, isFinal, resetHome }: SceneCon
 
     const [currentIndex, setCurrentIndex] = useState(0)
     const currentScene = scenes[currentIndex];
-    const audioRef = useRef(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const stopTriggeredRef = useRef(false);
+
+    useEffect(() => {
+        if (scenes.length > 0) {
+            stopTriggeredRef.current = false;
+        }
+    }, [scenes.length]);
 
     useEffect(() => {
         if (!currentScene) return;
@@ -45,29 +52,66 @@ export default function SceneController({ scenes, isFinal, resetHome }: SceneCon
     }, [currentScene]);
 
     function handleSceneEnded() {
-        setCurrentIndex(currentIndex + 1)
+        setCurrentIndex((prevIndex) => {
+            const nextIndex = prevIndex + 1;
+
+            if (nextIndex >= scenes.length && isFinal) {
+                stopMusicwithFade();
+            }
+
+            return nextIndex;
+        });
     }
 
     function stopMusicwithFade() {
-        /*setTimeout(() => {
-            const endMusic = setInterval(()=>{
-            console.log(audioRef.current.volume, " volume down")
-            audioRef.current.volume = audioRef.current.volume - .1
-            if (audioRef.current.volume <= .1) {
-                audioRef.current.volume = 0
-                audioRef.current.pause()
-                audioRef.current.src = ''
-                audioRef.current = null
-                clearInterval(endMusic)
-                resetHome()
-            }
+        if (stopTriggeredRef.current) return;
+        stopTriggeredRef.current = true;
+
+        const audio = audioRef.current;
+        if (!audio) {
+            resetHome();
+            return;
         }
-        ,2000)
-            
-        }, 30000);*/
+
+        const fadeStep = 0.05;
+        const fadeInterval = 200;
+
+        const fadeTimer = setInterval(() => {
+            if (!audioRef.current) {
+                clearInterval(fadeTimer);
+                resetHome();
+                return;
+            }
+
+            const nextVolume = Math.max(audioRef.current.volume - fadeStep, 0);
+            audioRef.current.volume = Number(nextVolume.toFixed(3));
+
+            if (nextVolume <= 0) {
+                audioRef.current.pause();
+                audioRef.current.src = "";
+                audioRef.current = null;
+                clearInterval(fadeTimer);
+                resetHome();
+            }
+        }, fadeInterval);
     }
 
+    useEffect(() => {
+        if (isFinal && currentIndex >= scenes.length && scenes.length > 0) {
+            stopMusicwithFade();
+        }
+    }, [isFinal, currentIndex, scenes.length]);
 
+    useEffect(() => {
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.src = "";
+                audioRef.current = null;
+                stopTriggeredRef.current = false;
+            }
+        };
+    }, []);
 
     return (
         <div>
