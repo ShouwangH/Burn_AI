@@ -9,8 +9,8 @@ import { useNavigate } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Burns.AI" },
+    { name: "description", content: "See the Glory!" },
   ];
 }
 
@@ -27,19 +27,19 @@ export default function Home() {
 
     return <div className="w-full h-screen flex flex-col justify-evenly items-center text-amber-50 bg-black">
       <div className="text-6xl text-gray-300 font-mono ">
-        Documentary Now!
+        Burns.AI
       </div>
-      <p className="text-gray-400 text-3xl font-mono">AI generated, human centered</p>
+      <p className="text-gray-400 text-3xl font-mono">Mine eyes have seen the glory...</p>
       {(issignin) ?
           <><div className="border-2 rounded-xl">
           <SignIn />
           <SignInG />
-          <div className="flex justify-self-center w-3/4 m-4 place-content-center" onClick={() => setissignin(false)}>No login. Sign up</div>
+          <div className="flex justify-self-center w-3/4 m-4 place-content-center hover:cursor-pointer hover:bg-amber-50/10" onClick={() => setissignin(false)}>No login. Sign up</div>
         </div>
         </>:
           <div className='border-2 rounded-xl'>
             <SignUp />
-            <div className="flex justify-self-center w-3/4 m-4 place-content-center" onClick={() => setissignin(true)}>Already have a login. Sign in.</div>
+            <div className="flex justify-self-center w-3/4 m-4 place-content-center hover:cursor-pointer hover:bg-amber-50/10" onClick={() => setissignin(true)}>Already have a sign in.</div>
           </div> }
         </div>
   

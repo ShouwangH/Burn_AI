@@ -1,87 +1,68 @@
-# Welcome to React Router!
+# burns.ai 🎬
 
-A modern, production-ready template for building full-stack React applications using React Router.
+> Generate Ken Burns-style documentaries with AI-powered narration and imagery
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Overview
+
+burns.ai is a documentary creation tool that channels the aesthetic and narrative style of Ken Burns documentaries through generative AI. The application creates compelling visual stories by pairing AI-generated historical-style images with thoughtful narration, exploring profound (or not) themes through everyday human moments.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+### 🎨 Visual Generation
+- **Sepia-toned aesthetic**: Automatically generates images with aged, historical photography style
+- **Human-centered vignettes**: Focuses on everyday moments that reveal universal truths
+- **Vintage effects**: Adds grain, light leaks, and subtle imperfections for authenticity
 
-## Getting Started
+### 🎙️ Narrative Engine
+- **Intelligent narration**: Generates contemplative scripts that mirror Ken Burns' storytelling style
+- **Thematic depth**: Explores democracy, liberty, and human connection through mundane details
 
-### Installation
+### 🔧 Technical Architecture
+- **Prompt orchestration**: Single prompt generates coordinated image and narration pairs
+- **Agentic prompt engineering**: Creates both narration prompts and multiple image prompts
+- **React Router framework**: Smooth navigation between documentary scenes
+- **OpenAI integration**: Leverages GPT models for text and DALL-E for images
+- **Vercel AI SDK**: Streamlined AI operations and deployment
 
-Install the dependencies:
+### Creating a Documentary
 
-```bash
-npm install
-```
+1. **Choose a theme**: Select from preset themes or enter a custom topic
+2. **Generate**: Click "Create Documentary" to begin the AI generation process
+3. **Enjoy**: See your next Great American Documentary come to life
 
-### Development
 
-Start the development server with HMR:
+### Example Output
 
-```bash
-npm run dev
-```
+**Image**: *A sepia-toned photograph of a worn lunch pail resting on a factory windowsill, circa 1943*
 
-Your application will be available at `http://localhost:5173`.
+**Narration**: *"The lunch pail sits where Thomas Murphy left it, that Tuesday afternoon when the shift whistle called. Inside, half a sandwich his wife Mary wrapped at dawn, the wax paper folded with the same precise corners she'd learned from her mother. This simple meal—bologna on white bread—would fuel another eight hours at the munitions line. Democracy, it turns out, travels in lunch pails as much as in declarations."*
 
-## Building for Production
+## Tech Stack
 
-Create a production build:
+- **Frontend**: React with React Router
+- **AI Integration**: OpenAI API (GPT-4, DALL-E 3)
+- **Framework**: Vercel AI SDK
+- **Deployment**: Vercel
+- **Styling**: Tailwind CSS
 
-```bash
-npm run build
-```
 
-## Deployment
+## License
 
-### Docker Deployment
+MIT License - see [LICENSE](LICENSE) file for details
 
-To build and run using Docker:
+## Acknowledgments
 
-```bash
-docker build -t my-app .
+- Inspired by the documentary work of Ken Burns
+- Built with the Vercel AI SDK
+- Powered by OpenAI's GPT and DALL-E models
+- Special thanks to the open-source community
 
-# Run the container
-docker run -p 3000:3000 my-app
-```
+## Contact
 
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+- Website: [burns.ai](https://burnsai.vercel.app/)
+- Email: shouwangh82@gmail.com
+- GitHub: [@ShouwangH](https://github.com/ShouwangH)
 
 ---
 
-Built with ❤️ using React Router.
+*"History is malleable. A new cache of diaries can shed new light, and archeological evidence can challenge our popular assumptions." - Ken Burns*

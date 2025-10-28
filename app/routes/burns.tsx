@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import SceneController from "~/sceneController";
 import {auth} from "../src/lib/auth.server"
-import { redirect } from "react-router";
+import { redirect, useNavigate } from "react-router";
 import type { Scene } from "~/lib/scenes";
+import { authClient } from "~/src/lib/auth-client";
 
 export async function loader({ request }: LoaderFunctionArgs) {
     const session = await auth.api.getSession({ headers: request.headers })
@@ -22,6 +23,7 @@ export default function Test() {
     const [retryCount, setRetryCount] = useState(0)
     const [lastAttemptMs, setLastAttemptMs] = useState(0)
     const [attemptStart, setAttemptStart] = useState<number | null>(null)
+    const navigate = useNavigate();
 
     function reset () {
         console.log('resethome')
@@ -98,6 +100,11 @@ export default function Test() {
         setVisibility(!visibility)
     }
 
+    async function handleLogout() {
+        await authClient.signOut();
+        navigate("/");
+    }
+
     const loadingPhrases = ["initializing sepia tone buffer…",
         "synchronizing violin resonance…",
         "allocating dramatic silence…",
@@ -122,26 +129,52 @@ export default function Test() {
     const showRetryCounter = !scenes.length && !visibility;
 
     return (
-        <div className="relative flex min-h-screen flex-col bg-black text-amber-50">
+        <div className="relative flex min-h-screen max-h-screen flex-col overflow-hidden bg-black text-amber-50">
             {showRetryCounter ? (
                 <div className="pointer-events-none absolute right-6 top-6 rounded-md bg-black/70 px-4 py-2 text-sm font-semibold tracking-wide text-amber-200">
                     <div>{retryCount}</div>
                     <div>{lastAttemptMs}</div>
                 </div>
             ) : null}
-            <div className="flex flex-1 flex-col items-center justify-center">
-                {scenes.length ? <SceneController scenes={scenes} isFinal={isFinal} resetHome={reset}/> :
-                    <form className="flex w-full flex-col items-center gap-6 px-6" onSubmit={(e) => {
-                        e.preventDefault()
-                        setInput('')
-                        fetchScenes(input)
-                        handleVis()
-                        setIsFinal(false)
-                    }}>
-                        <input className={inputClassName} placeholder="What do you want to Burns?" value={input} onChange={(e) => setInput(e.target.value)} />
-                        <p className={(!visibility && !scenes.length) ? "animate-pulse text-2xl font-serif italic text-amber-50/90" : "invisible"} >{burnsPhrase}</p>
-                    </form>}
-            </div>
+            {scenes.length ? (
+                <div className="flex flex-1 flex-col items-center justify-center">
+                    <SceneController scenes={scenes} isFinal={isFinal} resetHome={reset}/>
+                </div>
+            ) : (
+                <div className="flex flex-1 flex-col items-center justify-center px-6">
+                    <form
+                        className="flex w-full max-w-3xl flex-col items-center gap-6"
+                        onSubmit={(e) => {
+                            e.preventDefault()
+                            setInput('')
+                            fetchScenes(input)
+                            handleVis()
+                            setIsFinal(false)
+                        }}
+                    >
+                        <img
+                            src="/Ken%20Burns.png"
+                            alt="Ken Burns portrait"
+                            className="w-full rounded-lg object-cover"
+                            style={{ maxHeight: "50vh" }}
+                        />
+                        <input
+                            className={inputClassName}
+                            placeholder="What do you want to Burns?"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                        />
+                        <p className={(!visibility && !scenes.length) ? "animate-pulse text-2xl font-serif italic text-amber-50/90" : "invisible"}>{burnsPhrase}</p>
+                        {visibility && <button
+                            type="button"
+                            className="w-full max-w-3xl text-sm font-semibold text-gray-500 hover:bg-amber-50/10  hover:cursor-pointer"
+                            onClick={handleLogout}
+                        >
+                            Log out
+                        </button>}
+                    </form>
+                </div>
+            )}
         </div>
     );
 }
