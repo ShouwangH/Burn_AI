@@ -43,6 +43,7 @@ critical rules:
   - nouns: concrete, archival (ledger, dispatch, telegram, diary, boots, rails).
   - verbs: measured, weighty (endured, recorded, vanished, returned, persisted).
   - adjectives: sparse and subdued (quiet, faded, somber, endless).
+- IMAGE PROMPT must declare a single focal subject for the camera to center on, note camera distance (close portrait, medium shot, wide establishing), and specify leading lines or framing devices.
 - avoid:
   - abstractions without anchoring objects.
   - adjectives like “amazing,” “horrific,” “fantastic.”
@@ -60,6 +61,7 @@ Constraints:
 
 export const sceneSchema = jsonSchema<{
   scene_id: string;
+  title: string;
   year: string;
   place: string;
   narration_text: string;
@@ -68,6 +70,7 @@ export const sceneSchema = jsonSchema<{
   type: "object",
   properties: {
     scene_id: { type: "string" },
+    title: { type: "string" },
     year: { type: "string" },
     place: { type: "string" },
     narration_text: { type: "string" },
